@@ -1,23 +1,23 @@
 fileFormatVersion: 2
-guid: f8d6fa2aed6833f4eb53c52aa8b90445
-timeCreated: 1512892210
+guid: 7ce02724c47a7fe4dbc89bbcf3f48c09
+timeCreated: 1512941682
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: Icosphere
-    100002: //RootNode
-    400000: Icosphere
-    400002: //RootNode
-    2300000: Icosphere
-    3300000: Icosphere
-    4300000: Icosphere
+    100000: //RootNode
+    100002: default
+    400000: //RootNode
+    400002: default
+    2300000: default
+    3300000: default
+    4300000: default
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: IcosphereMat
-    second: {fileID: 2100000, guid: 153892f5235c19c4bb4553791858eee8, type: 2}
+      name: defaultMat
+    second: {fileID: 2100000, guid: 9e9bb49984c8bda478e7157b86110e74, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -55,7 +55,7 @@ ModelImporter:
     importCameras: 1
     importLights: 1
     swapUVChannels: 0
-    generateSecondaryUV: 1
+    generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0

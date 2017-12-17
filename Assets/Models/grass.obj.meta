@@ -1,23 +1,23 @@
 fileFormatVersion: 2
-guid: b7592b33f77491e42bde4b7d9f8fd7df
-timeCreated: 1512865340
+guid: b4eb13c0cf38bae438f19cd803344b50
+timeCreated: 1513454872
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
     100000: //RootNode
-    100002: rock_Icosphere
+    100002: grass.001_Cube.001
     400000: //RootNode
-    400002: rock_Icosphere
-    2300000: rock_Icosphere
-    3300000: rock_Icosphere
-    4300000: rock_Icosphere
+    400002: grass.001_Cube.001
+    2300000: grass.001_Cube.001
+    3300000: grass.001_Cube.001
+    4300000: grass.001_Cube.001
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: rock_IcosphereMat
-    second: {fileID: 2100000, guid: 72c304ab9a0e91a4e898e778c4d78a62, type: 2}
+      name: grass.001_Cube.001Mat
+    second: {fileID: 2100000, guid: 1812e9f9839a7d3489fc271674092ef3, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -47,7 +47,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.2
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     importVisibility: 1

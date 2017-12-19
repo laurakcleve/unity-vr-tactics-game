@@ -1,0 +1,157 @@
+fileFormatVersion: 2
+guid: 6fa5ffb1c2bcd20448f2501858f4ce7e
+timeCreated: 1512874735
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: stage_Plane.007
+    100004: terrain--1_Plane
+    100006: terrain--2_Plane.006
+    100008: terrain--3_Plane.005
+    100010: terrain--4_Plane.004
+    100012: terrain--5.001_Plane.008
+    100014: terrain--5_Plane.003
+    400000: //RootNode
+    400002: stage_Plane.007
+    400004: terrain--1_Plane
+    400006: terrain--2_Plane.006
+    400008: terrain--3_Plane.005
+    400010: terrain--4_Plane.004
+    400012: terrain--5.001_Plane.008
+    400014: terrain--5_Plane.003
+    2300000: stage_Plane.007
+    2300002: terrain--1_Plane
+    2300004: terrain--2_Plane.006
+    2300006: terrain--3_Plane.005
+    2300008: terrain--4_Plane.004
+    2300010: terrain--5.001_Plane.008
+    2300012: terrain--5_Plane.003
+    3300000: stage_Plane.007
+    3300002: terrain--1_Plane
+    3300004: terrain--2_Plane.006
+    3300006: terrain--3_Plane.005
+    3300008: terrain--4_Plane.004
+    3300010: terrain--5.001_Plane.008
+    3300012: terrain--5_Plane.003
+    4300000: stage_Plane.007
+    4300002: terrain--1_Plane
+    4300004: terrain--2_Plane.006
+    4300006: terrain--3_Plane.005
+    4300008: terrain--4_Plane.004
+    4300010: terrain--5.001_Plane.008
+    4300012: terrain--5_Plane.003
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: stage_Plane.007Mat
+    second: {fileID: 2100000, guid: 6db612fd921384f488ec6facae1eaa90, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: terrain--1_PlaneMat
+    second: {fileID: 2100000, guid: 4237f20d48d4abf4380597fb5773bce8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: terrain--2_Plane.006Mat
+    second: {fileID: 2100000, guid: d47093b5c9255844c91750de141922f5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: terrain--3_Plane.005Mat
+    second: {fileID: 2100000, guid: 4e47e0a66e15e064fbed568ed7272d06, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: terrain--4_Plane.004Mat
+    second: {fileID: 2100000, guid: b21b7c78122fa1841b300147dbb73472, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: terrain--5.001_Plane.008Mat
+    second: {fileID: 2100000, guid: deb5325c89ef4e7428a348f6255c44d5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: terrain--5_Plane.003Mat
+    second: {fileID: 2100000, guid: 9f41bcf67868e8243b5331cf9e66437e, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 1
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -9,13 +9,31 @@ public class GameManager : MonoBehaviour {
 	public float tileStartHeight;
 	public int stageSize;
 	public float tileSize;
+	public GameObject[] units;
+	public int totalRounds;
 
-	
-	void Start () {
-		CreateTiles();	
+	public static GameManager instance = null;
+	private GameObject[,] tiles;
+	private int activeUnit;
+	private int round;
+
+	void Awake () {
+		if (instance == null) {
+            instance = this;
+        }
+        else if (instance != this) {
+            Destroy(this);
+        }
+
+		Debug.Log("Game manager instance: " + instance);
+		tiles = CreateTiles();
+		PlaceUnits();
+		round = 0;	
 	}
 	
-	void CreateTiles() {
+	GameObject[,] CreateTiles() {
+
+		GameObject[,] tempTiles = new GameObject[stageSize, stageSize];
 
 		for (int x = 0; x < stageSize; x++) {
 			for (int z = 0; z < stageSize; z++) { 
@@ -39,7 +57,6 @@ public class GameManager : MonoBehaviour {
 					out hit, 
 					Mathf.Infinity
 				)) {
-					Debug.Log("Raycast hit");
 					height = hit.point.y;
 					tileInstance.transform.position = new Vector3(
 						tileInstance.transform.position.x,
@@ -54,10 +71,41 @@ public class GameManager : MonoBehaviour {
 				tileScript.setHeight(height);
 
 				tileInstance.name = "Tile " + x + "," + z;
+
+				tempTiles[x,z] = tileInstance;
 			}
 		}
 
-
+		return tempTiles;
 
 	}
+
+	void PlaceUnits() {
+		for (int i = 0; i < units.Length; i++) {
+            int x = units[i].GetComponent<Unit>().startingX;
+            int z = units[i].GetComponent<Unit>().startingZ;
+			GameObject tile = tiles[x,z];
+            GameObject newUnit = Instantiate(units[i], tile.transform.position, Quaternion.identity) as GameObject;
+			newUnit.transform.eulerAngles = new Vector3(0, newUnit.GetComponent<Unit>().rotation, 0);
+        }
+
+		activeUnit = 0;
+		Debug.Log("Round 1");
+		units[activeUnit].GetComponent<Unit>().TakeTurn();
+	}
+
+	public void PassTurn()
+    {
+        while (round < totalRounds) {
+            if (activeUnit >= units.Length - 1) {
+                activeUnit = 0;
+            }
+            else {
+                activeUnit++;
+            }
+            round++;
+			Debug.Log("Round " + round);
+            units[activeUnit].GetComponent<Unit>().TakeTurn();
+        }
+    }
 }

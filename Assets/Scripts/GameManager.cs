@@ -1,21 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
+	public static GameManager instance = null;
 	public GameObject tilePrefab;
 	public Transform stageCenter;
 	public float tileStartHeight;
 	public int stageSize;
 	public float tileSize;
-	public GameObject[] units;
+	public GameObject[] unitPrefabs;
 	public int totalRounds;
+	public GameObject unitButtonPrefab;
+	public float unitButtonMargin;
 
-	public static GameManager instance = null;
 	private GameObject[,] tiles;
 	private int activeUnit;
 	private int round;
+	private GameObject[] unitInstances;
+	private GameObject unitListCanvas;
+	private GameObject[] unitButtons;
 
 	void Awake () {
 		if (instance == null) {
@@ -25,10 +31,15 @@ public class GameManager : MonoBehaviour {
             Destroy(this);
         }
 
-		Debug.Log("Game manager instance: " + instance);
+		unitListCanvas = GameObject.Find("UnitListCanvas");
+
 		tiles = CreateTiles();
 		PlaceUnits();
-		round = 0;	
+
+		activeUnit = 0;
+        round = 1;
+        Debug.Log("Initial: Round 1");
+        unitInstances[activeUnit].GetComponent<Unit>().TakeTurn();
 	}
 	
 	GameObject[,] CreateTiles() {
@@ -81,31 +92,112 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void PlaceUnits() {
-		for (int i = 0; i < units.Length; i++) {
-            int x = units[i].GetComponent<Unit>().startingX;
-            int z = units[i].GetComponent<Unit>().startingZ;
-			GameObject tile = tiles[x,z];
-            GameObject newUnit = Instantiate(units[i], tile.transform.position, Quaternion.identity) as GameObject;
-			newUnit.transform.eulerAngles = new Vector3(0, newUnit.GetComponent<Unit>().rotation, 0);
+
+		unitInstances = new GameObject[unitPrefabs.Length];
+		unitButtons = new GameObject[unitPrefabs.Length];
+
+		for (int i = 0; i < unitPrefabs.Length; i++) {
+
+			// Instantiate units
+            
+			Unit unitPrefabScript = unitPrefabs[i].GetComponent<Unit>();
+			int x = unitPrefabScript.startingX;
+            int z = unitPrefabScript.startingZ;
+            
+			GameObject newUnit = Instantiate(
+				unitPrefabs[i], 
+				tiles[x,z].transform.position, 
+				Quaternion.identity
+			) as GameObject;
+			
+			newUnit.transform.eulerAngles = new Vector3(
+				0, 
+				newUnit.GetComponent<Unit>().rotation, 
+				0
+			);
+
+			newUnit.name = "Unit " + (i+1);
+
+			newUnit.GetComponent<Unit>().SetStartingNumber(i);
+			Debug.Log("Setting " + newUnit.name + "'s starting number to " + i);
+
+
+			//Instantiate unit buttons
+
+			float buttonHeight = unitButtonPrefab.GetComponent<RectTransform>().rect.height;
+
+			Vector3 buttonPos = new Vector3(
+				unitButtonPrefab.transform.position.x, 
+				unitButtonPrefab.transform.position.y + (i * (buttonHeight + unitButtonMargin)), 
+				unitButtonPrefab.transform.position.z
+			);
+
+            GameObject newUnitButton = Instantiate(unitButtonPrefab) as GameObject;
+
+            newUnitButton.transform.SetParent(unitListCanvas.transform, false);
+
+			RectTransform buttonRect = newUnitButton.GetComponent<RectTransform>();
+
+			float posX = buttonRect.anchoredPosition.x;
+			float posY = buttonRect.anchoredPosition.y - (i * (buttonHeight + unitButtonMargin));
+
+			buttonRect.anchoredPosition = new Vector2(posX, posY);
+
+
+			// Set button text
+
+			newUnitButton.transform.GetComponentInChildren<Text>().text = newUnit.name;
+
+			newUnitButton.name = "Unit " + (i+1) + " button";
+
+
+			unitButtons[i] = newUnitButton;
+
+			newUnit.GetComponent<Unit>().SetButton();
+
+			unitInstances[i] = newUnit;
+
         }
 
-		activeUnit = 0;
-		Debug.Log("Round 1");
-		units[activeUnit].GetComponent<Unit>().TakeTurn();
+		// Debug.Log("Buttons:");
+		// foreach (GameObject button in unitButtons) {
+		// 	Debug.Log(button);
+		// }
+
+		
+		
+
 	}
 
-	public void PassTurn()
+	public GameObject GetUnitButton(int unit) {
+		return unitButtons[unit];
+	}
+
+	public void EndTurn()
     {
-        while (round < totalRounds) {
-            if (activeUnit >= units.Length - 1) {
+		Debug.Log("Round: " + round);
+        if (round < totalRounds) {
+            if (activeUnit >= unitPrefabs.Length - 1) {
                 activeUnit = 0;
+				round++;
             }
             else {
                 activeUnit++;
             }
-            round++;
+
+			//Remove previous unit's highlight
+			GameObject previousUnit;
+			if (activeUnit == 0) {
+				previousUnit = unitInstances[unitInstances.Length-1];
+			}
+			else {
+				previousUnit = unitInstances[activeUnit-1];
+			}
+			previousUnit.GetComponent<Unit>().SetButtonColor(Color.cyan);
+
+            Debug.Log("New active unit: " + activeUnit);
 			Debug.Log("Round " + round);
-            units[activeUnit].GetComponent<Unit>().TakeTurn();
+            unitInstances[activeUnit].GetComponent<Unit>().TakeTurn();
         }
     }
 }

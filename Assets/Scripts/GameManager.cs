@@ -6,23 +6,40 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour {
 
 	public static GameManager instance = null;
-	public GameObject tilePrefab;
-	public Transform stageCenter;
-	public float tileStartHeight;
-	public int stageSize;
-	public float tileSize;
-	public GameObject[] unitPrefabs;
+	
 	public int totalRounds;
+
+	[Header("Stage")]
+	public Transform stageCenter;
+	[Tooltip("Number of tiles on one side")]
+	[Range(1,20)]
+	public int stageSize;
+	
+	[Header("Tile")]
+	public GameObject tilePrefab;
+	[Tooltip("Tile instantiation height before raycasting down onto the stage")]
+	[Range(0,10)]
+	public float tileStartHeight;
+	public float tileSize;
+	
+	[Header("Units")]
+	public GameObject[] unitPrefabs;
+	
+	[Header("Unit buttons")]
 	public GameObject unitButtonPrefab;
 	public float unitButtonMargin;
 
-	private GameObject[,] tiles;
-	private int activeUnit;
-	private int round;
-	private GameObject[] unitInstances;
-	private GameObject unitListCanvas;
-	private GameObject[] unitButtons;
 
+	private GameObject[,] tiles;
+	private GameObject[] unitInstances;
+	private GameObject[] unitButtons;
+	private GameObject unitListCanvas;
+	private int round;
+	private int activeUnit;
+
+
+	/* AWAKE
+	-------------------------------------------------------- */
 	void Awake () {
 		if (instance == null) {
             instance = this;
@@ -38,11 +55,13 @@ public class GameManager : MonoBehaviour {
 
 		activeUnit = 0;
         round = 1;
-        Debug.Log("Initial: Round 1");
         unitInstances[activeUnit].GetComponent<Unit>().TakeTurn();
 	}
-	
-	GameObject[,] CreateTiles() {
+
+
+    /* CREATE TILES
+	-------------------------------------------------------- */
+    GameObject[,] CreateTiles() {
 
 		GameObject[,] tempTiles = new GameObject[stageSize, stageSize];
 
@@ -91,7 +110,9 @@ public class GameManager : MonoBehaviour {
 
 	}
 
-	void PlaceUnits() {
+    /* PLACE UNITS
+	-------------------------------------------------------- */
+    void PlaceUnits() {
 
 		unitInstances = new GameObject[unitPrefabs.Length];
 		unitButtons = new GameObject[unitPrefabs.Length];
@@ -118,62 +139,39 @@ public class GameManager : MonoBehaviour {
 
 			newUnit.name = "Unit " + (i+1);
 
-			newUnit.GetComponent<Unit>().SetStartingNumber(i);
-			Debug.Log("Setting " + newUnit.name + "'s starting number to " + i);
+			unitInstances[i] = newUnit;
 
 
 			//Instantiate unit buttons
 
-			float buttonHeight = unitButtonPrefab.GetComponent<RectTransform>().rect.height;
-
-			Vector3 buttonPos = new Vector3(
-				unitButtonPrefab.transform.position.x, 
-				unitButtonPrefab.transform.position.y + (i * (buttonHeight + unitButtonMargin)), 
-				unitButtonPrefab.transform.position.z
-			);
-
             GameObject newUnitButton = Instantiate(unitButtonPrefab) as GameObject;
-
             newUnitButton.transform.SetParent(unitListCanvas.transform, false);
 
 			RectTransform buttonRect = newUnitButton.GetComponent<RectTransform>();
-
+			float buttonHeight = buttonRect.rect.height;
 			float posX = buttonRect.anchoredPosition.x;
 			float posY = buttonRect.anchoredPosition.y - (i * (buttonHeight + unitButtonMargin));
-
 			buttonRect.anchoredPosition = new Vector2(posX, posY);
 
 
 			// Set button text
 
 			newUnitButton.transform.GetComponentInChildren<Text>().text = newUnit.name;
-
-			newUnitButton.name = "Unit " + (i+1) + " button";
+			newUnitButton.name = newUnit.name + " button";
 
 
 			unitButtons[i] = newUnitButton;
 
-			newUnit.GetComponent<Unit>().SetButton();
-
-			unitInstances[i] = newUnit;
+			unitInstances[i].GetComponent<Unit>().SetButton(unitButtons[i]);
 
         }
 
-		// Debug.Log("Buttons:");
-		// foreach (GameObject button in unitButtons) {
-		// 	Debug.Log(button);
-		// }
-
-		
-		
-
 	}
 
-	public GameObject GetUnitButton(int unit) {
-		return unitButtons[unit];
-	}
 
-	public void EndTurn()
+    /* END TURN
+	-------------------------------------------------------- */
+    public void EndTurn()
     {
 		Debug.Log("Round: " + round);
         if (round < totalRounds) {
@@ -186,6 +184,7 @@ public class GameManager : MonoBehaviour {
             }
 
 			//Remove previous unit's highlight
+
 			GameObject previousUnit;
 			if (activeUnit == 0) {
 				previousUnit = unitInstances[unitInstances.Length-1];
@@ -197,7 +196,9 @@ public class GameManager : MonoBehaviour {
 
             Debug.Log("New active unit: " + activeUnit);
 			Debug.Log("Round " + round);
+			
             unitInstances[activeUnit].GetComponent<Unit>().TakeTurn();
         }
     }
+
 }

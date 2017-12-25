@@ -9,23 +9,34 @@ public class Unit : MonoBehaviour {
 	public int startingZ;
 	public int rotation;
 
-	public GameObject unitButton;
-	private int startingNumber;
+	private GameObject unitButton;
 
-	public void TakeTurn() {
+
+    /* TAKE TURN
+	-------------------------------------------------------- */
+    public void TakeTurn() {
 		Debug.Log(gameObject.name + " taking turn");
 		SetButtonColor(Color.black);
 	}
 
-	public void SetStartingNumber(int num) {
-		startingNumber = num;
-	}
 
-	public void SetButton() {
-        unitButton = GameManager.instance.GetUnitButton(startingNumber);
+    /* SET BUTTON
+	-------------------------------------------------------- */
+    public void SetButton(GameObject button) {
+		unitButton = button;
     }
 
-	public void SetButtonColor(Color newColor) {
+
+    /* GET BUTTON
+	-------------------------------------------------------- */
+	public GameObject GetButton() {
+		return unitButton;
+	}
+
+
+    /* SET BUTTON COLOR
+	-------------------------------------------------------- */
+    public void SetButtonColor(Color newColor) {
 		ColorBlock cb = unitButton.GetComponent<Button>().colors;
         cb.normalColor = newColor;
         unitButton.GetComponent<Button>().colors = cb;

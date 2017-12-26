@@ -31,16 +31,33 @@ public class GameManager : MonoBehaviour {
 
 
 	private GameObject[,] tiles;
-	private GameObject[] unitInstances;
+	private GameObject[] units;
 	private GameObject[] unitButtons;
 	private GameObject unitListCanvas;
 	private int round;
 	private int activeUnit;
 
+    public int ActiveUnit { 
+		get { 
+			return activeUnit; 
+		} 
+		set {
+			if (value > Units.Length - 1) {
+				activeUnit = 0;
+				round++;
+			} else {
+				activeUnit = value; 
+			}
+		} 
+	}
 
-	/* AWAKE
+    public GameObject[] Units { 
+		get { return units; } set { units = value; } }
+
+
+    /* AWAKE
 	-------------------------------------------------------- */
-	void Awake () {
+    void Awake () {
 		if (instance == null) {
             instance = this;
         }
@@ -53,9 +70,9 @@ public class GameManager : MonoBehaviour {
 		tiles = CreateTiles();
 		PlaceUnits();
 
-		activeUnit = 0;
+		ActiveUnit = 0;
         round = 1;
-        unitInstances[activeUnit].GetComponent<Unit>().TakeTurn();
+        Units[ActiveUnit].GetComponent<Unit>().TakeTurn();
 	}
 
 
@@ -65,21 +82,27 @@ public class GameManager : MonoBehaviour {
 
 		GameObject[,] tempTiles = new GameObject[stageSize, stageSize];
 
-		for (int x = 0; x < stageSize; x++) {
-			for (int z = 0; z < stageSize; z++) { 
-				float tileX = -((stageSize/2 - z) * tileSize) + tileSize / 2;
-				float tileY = -((stageSize/2 - x) * tileSize) + tileSize / 2;
+		for (int z = 0; z < stageSize; z++) {
+			for (int x = 0; x < stageSize; x++) { 
+				
+				// Instantiate tiles above the stage
+
+				float tileX = -((stageSize/2 - x) * tileSize) + tileSize / 2;
+				float tileZ = -((stageSize/2 - z) * tileSize) + tileSize / 2;
 
 				float height = 0;
 
-				Vector3 tilePos = new Vector3(tileX, tileStartHeight, tileY);
-
 				GameObject tileInstance = Instantiate(
 					tilePrefab, 
-					tilePos, 
+					new Vector3(tileX, tileStartHeight, tileZ), 
 					Quaternion.identity
 				) as GameObject;
+
+				tileInstance.GetComponent<Renderer>().enabled = false;
 		
+
+				// Shoot the tiles down onto the stage
+
 				RaycastHit hit;
 				if (Physics.Raycast(
 					tileInstance.transform.position, 
@@ -95,16 +118,36 @@ public class GameManager : MonoBehaviour {
 					);
 				}
 
+
+				// Set some fields
+
 				Tile tileScript = tileInstance.GetComponent<Tile>();
-				tileScript.setX(x);
-				tileScript.setZ(z);
-				tileScript.setHeight(height);
+				tileScript.X = x;
+				tileScript.Z = z;
+				tileScript.Height = height;
 
 				tileInstance.name = "Tile " + x + "," + z;
 
 				tempTiles[x,z] = tileInstance;
 			}
 		}
+
+
+		// Populate connected tiles
+
+		for (int z = 0; z < stageSize; z++) {
+            for (int x = 0; x < stageSize; x++) {
+				List<GameObject> connectedTiles = tempTiles[z,x].GetComponent<Tile>().connected;
+                if (z > 0)
+                    connectedTiles.Add(tempTiles[z - 1, x]);
+                if (x < stageSize-1)
+                    connectedTiles.Add(tempTiles[z, x + 1]);
+                if (z < stageSize-1)
+                    connectedTiles.Add(tempTiles[z + 1, x]);
+                if (x > 0)
+                    connectedTiles.Add(tempTiles[z, x - 1]);
+            }
+        }
 
 		return tempTiles;
 
@@ -114,7 +157,7 @@ public class GameManager : MonoBehaviour {
 	-------------------------------------------------------- */
     void PlaceUnits() {
 
-		unitInstances = new GameObject[unitPrefabs.Length];
+		Units = new GameObject[unitPrefabs.Length];
 		unitButtons = new GameObject[unitPrefabs.Length];
 
 		for (int i = 0; i < unitPrefabs.Length; i++) {
@@ -125,29 +168,33 @@ public class GameManager : MonoBehaviour {
 			int x = unitPrefabScript.startingX;
             int z = unitPrefabScript.startingZ;
             
-			GameObject newUnit = Instantiate(
+			GameObject unitInstance = Instantiate(
 				unitPrefabs[i], 
 				tiles[x,z].transform.position, 
 				Quaternion.identity
 			) as GameObject;
+
+			Unit unitInstanceScript = unitInstance.GetComponent<Unit>();
 			
-			newUnit.transform.eulerAngles = new Vector3(
+			unitInstance.transform.eulerAngles = new Vector3(
 				0, 
-				newUnit.GetComponent<Unit>().rotation, 
+				unitInstanceScript.rotation, 
 				0
 			);
 
-			newUnit.name = "Unit " + (i+1);
+			unitInstance.name = "Unit " + (i+1);
 
-			unitInstances[i] = newUnit;
+			unitInstanceScript.currentTile = tiles[x,z];
+
+			Units[i] = unitInstance;
 
 
-			//Instantiate unit buttons
+			//Instantiate and place unit buttons
 
-            GameObject newUnitButton = Instantiate(unitButtonPrefab) as GameObject;
-            newUnitButton.transform.SetParent(unitListCanvas.transform, false);
+            GameObject unitButtonInstance = Instantiate(unitButtonPrefab) as GameObject;
+            unitButtonInstance.transform.SetParent(unitListCanvas.transform, false);
 
-			RectTransform buttonRect = newUnitButton.GetComponent<RectTransform>();
+			RectTransform buttonRect = unitButtonInstance.GetComponent<RectTransform>();
 			float buttonHeight = buttonRect.rect.height;
 			float posX = buttonRect.anchoredPosition.x;
 			float posY = buttonRect.anchoredPosition.y - (i * (buttonHeight + unitButtonMargin));
@@ -156,13 +203,13 @@ public class GameManager : MonoBehaviour {
 
 			// Set button text
 
-			newUnitButton.transform.GetComponentInChildren<Text>().text = newUnit.name;
-			newUnitButton.name = newUnit.name + " button";
+			unitButtonInstance.transform.GetComponentInChildren<Text>().text = unitInstance.name;
+			unitButtonInstance.name = unitInstance.name + " button";
 
+			unitInstanceScript.UnitButton = unitButtonInstance;
 
-			unitButtons[i] = newUnitButton;
+			unitButtons[i] = unitButtonInstance;
 
-			unitInstances[i].GetComponent<Unit>().SetButton(unitButtons[i]);
 
         }
 
@@ -173,31 +220,14 @@ public class GameManager : MonoBehaviour {
 	-------------------------------------------------------- */
     public void EndTurn()
     {
-		Debug.Log("Round: " + round);
+		// Clean up turn
+		Unit activeUnitScript = Units[ActiveUnit].GetComponent<Unit>();
+		activeUnitScript.HideValidMoves();
+		activeUnitScript.SetButtonColor(Color.cyan);
+	
         if (round < totalRounds) {
-            if (activeUnit >= unitPrefabs.Length - 1) {
-                activeUnit = 0;
-				round++;
-            }
-            else {
-                activeUnit++;
-            }
-
-			//Remove previous unit's highlight
-
-			GameObject previousUnit;
-			if (activeUnit == 0) {
-				previousUnit = unitInstances[unitInstances.Length-1];
-			}
-			else {
-				previousUnit = unitInstances[activeUnit-1];
-			}
-			previousUnit.GetComponent<Unit>().SetButtonColor(Color.cyan);
-
-            Debug.Log("New active unit: " + activeUnit);
-			Debug.Log("Round " + round);
-			
-            unitInstances[activeUnit].GetComponent<Unit>().TakeTurn();
+            ActiveUnit++;
+            Units[ActiveUnit].GetComponent<Unit>().TakeTurn();
         }
     }
 

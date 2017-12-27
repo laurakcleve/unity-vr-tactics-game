@@ -11,12 +11,8 @@ public class Unit : MonoBehaviour {
 	public int move;
 	public GameObject currentTile;
 
-	private GameObject unitButton;
 	private List<GameObject> validMoves;
 	private bool hasMoved = false;
-
-    public GameObject UnitButton { 
-		get { return unitButton; } set { unitButton = value; } }
 
 
     /* TAKE TURN
@@ -24,7 +20,6 @@ public class Unit : MonoBehaviour {
     public void TakeTurn() {
 		hasMoved = false;
 		DisplayValidMoves();
-		SetButtonColor(Color.black);
 	}
 
 
@@ -34,29 +29,6 @@ public class Unit : MonoBehaviour {
 		foreach (GameObject tile in validMoves) {
             tile.GetComponent<Renderer>().enabled = false;
         }
-	}
-
-
-    /* SET BUTTON
-	-------------------------------------------------------- */
-    public void SetButton(GameObject button) {
-		UnitButton = button;
-    }
-
-
-    /* GET BUTTON
-	-------------------------------------------------------- */
-	public GameObject GetButton() {
-		return UnitButton;
-	}
-
-
-    /* SET BUTTON COLOR
-	-------------------------------------------------------- */
-    public void SetButtonColor(Color newColor) {
-		ColorBlock cb = UnitButton.GetComponent<Button>().colors;
-        cb.normalColor = newColor;
-        UnitButton.GetComponent<Button>().colors = cb;
 	}
 
 

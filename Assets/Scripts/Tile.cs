@@ -24,6 +24,8 @@ public class Tile : MonoBehaviour {
 	// 	get { return connected; } set { connected = value; } }
 
 
+		/* AWAKE
+		-------------------------------------------------------- */
     void Awake() {
 		GetComponent<VRTK_InteractableObject>().InteractableObjectUsed += new InteractableObjectEventHandler(MoveUnitHere);
 
@@ -31,6 +33,8 @@ public class Tile : MonoBehaviour {
 	}
 
 
+	/* MOVE UNIT HERE
+	-------------------------------------------------------- */
 	void MoveUnitHere(object sender, InteractableObjectEventArgs e) {
 		gm.Units[gm.ActiveUnit].GetComponent<Unit>().MoveToTile(gameObject);
 	}

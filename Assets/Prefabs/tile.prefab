@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 114258662808146904}
   - component: {fileID: 114069154134921106}
   - component: {fileID: 65913955068378696}
+  - component: {fileID: 114408023305711018}
   m_Layer: 0
   m_Name: tile
   m_TagString: Untagged
@@ -139,3 +140,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connected: []
+--- !u!114 &114408023305711018
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1568509953074132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c33dafce37ca5c4099acfb744b26708, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  openSet: []
+  closedSet: []

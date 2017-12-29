@@ -11,6 +11,11 @@ public class Tile : MonoBehaviour {
 	private GameManager gm;
     public List<GameObject> connected;
 
+    private int gCost;
+    private int hCost;
+    private int fCost;
+    private Tile parent;
+
     public int X { 
 		get { return x; } set { x = value; } }
 
@@ -20,12 +25,23 @@ public class Tile : MonoBehaviour {
     public float Height { 
 		get { return height; } set { height = value; } }
 
-    // public List<GameObject> Connected { 
-	// 	get { return connected; } set { connected = value; } }
+    public int GCost { 
+        get { return gCost; } set { gCost = value; } }
+    
+    public int HCost { 
+        get { return hCost; } set { hCost = value; } }
+    
+    public int FCost { 
+        get { return GCost + HCost; } }
+
+    public Tile Parent { 
+        get { return parent; } set { parent = value; } }
 
 
-		/* AWAKE
-		-------------------------------------------------------- */
+
+
+    /* AWAKE
+    -------------------------------------------------------- */
     void Awake() {
 		GetComponent<VRTK_InteractableObject>().InteractableObjectUsed += new InteractableObjectEventHandler(MoveUnitHere);
 
@@ -36,6 +52,14 @@ public class Tile : MonoBehaviour {
 	/* MOVE UNIT HERE
 	-------------------------------------------------------- */
 	void MoveUnitHere(object sender, InteractableObjectEventArgs e) {
-		gm.Units[gm.ActiveUnit].GetComponent<Unit>().MoveToTile(gameObject);
+        Unit unitScript = gm.Units[gm.ActiveUnit].GetComponent<Unit>();
+        List<Tile> path = GetComponent<Pathfinding>().FindPath(unitScript.currentTile.GetComponent<Tile>(), this);
+		unitScript.MoveToTile(gameObject, path);
 	}
+
+
+    public void SetCosts(Tile start, Tile end) {
+        GCost = Mathf.Abs(X - start.X) + Mathf.Abs(Z - start.Z);
+        HCost = Mathf.Abs(X - end.X) + Mathf.Abs(Z - end.Z);
+    }
 }

@@ -65,13 +65,44 @@ public class Unit : MonoBehaviour {
 
 	/* MOVE TO TILE
 	-------------------------------------------------------- */
-	public void MoveToTile(GameObject tile) {
+	public void MoveToTile(GameObject destinationTile, List<Tile> path) {
 		if (!hasMoved) {
-			transform.position = tile.transform.position;
-			currentTile = tile;
+			// transform.position = tile.transform.position;
+			StartCoroutine(AnimateMove(path));
+			currentTile = destinationTile;
 			hasMoved = true;
 			HideValidMoves();
 		}
 	}
+
+	IEnumerator AnimateMove(List<Tile> path) {
+		foreach (Tile tile in path) {
+			float time = 1f;
+			float elapsedTime = 0;
+			Vector3 startingPos = transform.position;
+			while (elapsedTime < time)
+			{
+				transform.position = Vector3.Lerp(
+					startingPos,
+					tile.gameObject.transform.position,
+					(elapsedTime / time)
+				);
+				elapsedTime += Time.deltaTime;
+				yield return null;
+			}
+		}
+	}
+
+    // function MoveToPosition(newPosition : Vector3, time : float)
+    // {
+    //     var elapsedTime : float = 0;
+    //     var startingPos : Vector3 = transform.position;
+    //     while (elapsedTime < time)
+    //     {
+    //         transform.position = Vector3.Lerp(startingPos, newPosition, (elapsedTime / time));
+    //         elapsedTime += Time.deltaTime;
+    //         yield;
+    //     }
+    // }
 
 }

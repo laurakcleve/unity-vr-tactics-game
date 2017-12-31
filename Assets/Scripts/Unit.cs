@@ -11,6 +11,7 @@ public class Unit : MonoBehaviour {
 	public int move;
 	public GameObject currentTile;
 
+	private float moveTime = .7f;
 	private List<GameObject> validMoves;
 	private bool hasMoved = false;
 
@@ -68,6 +69,7 @@ public class Unit : MonoBehaviour {
 	public void MoveToTile(GameObject destinationTile, List<Tile> path) {
 		if (!hasMoved) {
 			// transform.position = tile.transform.position;
+			// GetComponent<BoxCollider>().isTrigger = true;
 			StartCoroutine(AnimateMove(path));
 			currentTile = destinationTile;
 			hasMoved = true;
@@ -75,9 +77,12 @@ public class Unit : MonoBehaviour {
 		}
 	}
 
+
+	/* ANIMATE MOVE
+	-------------------------------------------------------- */
 	IEnumerator AnimateMove(List<Tile> path) {
 		foreach (Tile tile in path) {
-			float time = 1f;
+			float time = moveTime;
 			float elapsedTime = 0;
 			Vector3 startingPos = transform.position;
 			while (elapsedTime < time)
@@ -91,18 +96,6 @@ public class Unit : MonoBehaviour {
 				yield return null;
 			}
 		}
+		// GetComponent<BoxCollider>().isTrigger = false;
 	}
-
-    // function MoveToPosition(newPosition : Vector3, time : float)
-    // {
-    //     var elapsedTime : float = 0;
-    //     var startingPos : Vector3 = transform.position;
-    //     while (elapsedTime < time)
-    //     {
-    //         transform.position = Vector3.Lerp(startingPos, newPosition, (elapsedTime / time));
-    //         elapsedTime += Time.deltaTime;
-    //         yield;
-    //     }
-    // }
-
 }

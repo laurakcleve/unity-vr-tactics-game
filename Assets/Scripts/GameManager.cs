@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using VRTK;
 
 public class GameManager : MonoBehaviour {
 
@@ -24,6 +25,10 @@ public class GameManager : MonoBehaviour {
 
 	[Header("Units")]
 	public GameObject[] unitPrefabs;
+	public enum movementTypes{
+		walk, grab
+	}
+	public movementTypes movementType;
 
 	[Header("Unit buttons")]
 	public GameObject unitButtonPrefab;
@@ -185,6 +190,10 @@ public class GameManager : MonoBehaviour {
 				unitInstanceScript.rotation,
 				0
 			);
+
+			if (movementType == movementTypes.grab) {
+				unitInstanceScript.GetComponent<VRTK_InteractableObject>().isGrabbable = true;
+			}
 
 			unitInstance.name = "Unit " + (i+1);
 

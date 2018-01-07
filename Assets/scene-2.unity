@@ -15,18 +15,18 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 8
   m_Fog: 0
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_FogColor: {r: 0.9558824, g: 0.84885454, b: 0.6185121, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.09
-  m_LinearFogStart: 0
-  m_LinearFogEnd: 300
+  m_FogDensity: 0.03
+  m_LinearFogStart: 1.29
+  m_LinearFogEnd: 316.88
   m_AmbientSkyColor: {r: 0.4705882, g: 0.27328485, b: 0.20069203, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: cede08c9fc471e64884909cd4bbeaf59, type: 2}
   m_HaloStrength: 0.184
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18327008, g: 0.22698069, b: 0.29513252, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -538,12 +538,12 @@ Prefab:
     - target: {fileID: 224000012623161658, guid: d46cf6b1ad9d84a48ae7548a2a6b41b3,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 263
+      value: 685
       objectReference: {fileID: 0}
     - target: {fileID: 224000012623161658, guid: d46cf6b1ad9d84a48ae7548a2a6b41b3,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -70
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224000012623161658, guid: d46cf6b1ad9d84a48ae7548a2a6b41b3,
         type: 2}
@@ -553,7 +553,7 @@ Prefab:
     - target: {fileID: 224000012623161658, guid: d46cf6b1ad9d84a48ae7548a2a6b41b3,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 120
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d46cf6b1ad9d84a48ae7548a2a6b41b3, type: 2}
@@ -1622,11 +1622,11 @@ MonoBehaviour:
   targetListPolicy: {fileID: 0}
   pointerRenderer: {fileID: 0}
   activationButton: 10
-  holdButtonToActivate: 1
-  activateOnEnable: 0
+  holdButtonToActivate: 0
+  activateOnEnable: 1
   activationDelay: 0
   selectionButton: 10
-  selectOnPress: 0
+  selectOnPress: 1
   selectionDelay: 0
   selectAfterHoverDuration: 0
   interactWithObjects: 1
@@ -1647,7 +1647,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 947b27445602ed640b885db7e667dfc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grabButton: 7
+  grabButton: 3
   grabPrecognition: 0
   throwMultiplier: 1
   createRigidBodyWhenNotTouching: 0
@@ -1692,8 +1692,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71b26f999cbdac8478b6c2a046256169, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activationButton: 10
-  activationMode: 0
+  activationButton: 0
+  activationMode: 2
   selectionButton: 3
   clickMethod: 0
   attemptClickOnDeactivate: 0
@@ -4873,15 +4873,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400000, guid: 31b512640a059324a90ece18cad74e2c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.007
+      value: 1.41
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 31b512640a059324a90ece18cad74e2c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.974
+      value: 2.4
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 31b512640a059324a90ece18cad74e2c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 8.405
+      value: 8.61
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 31b512640a059324a90ece18cad74e2c, type: 3}
       propertyPath: m_LocalRotation.x
@@ -5383,6 +5383,77 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 957011277}
+--- !u!1 &959251683
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 959251686}
+  - component: {fileID: 959251685}
+  - component: {fileID: 959251684}
+  m_Layer: 0
+  m_Name: Terrain
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 1
+--- !u!154 &959251684
+TerrainCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 959251683}
+  m_Material: {fileID: 0}
+  m_Enabled: 1
+  m_TerrainData: {fileID: 15600000, guid: 3d681f1bdc9e37644aaff6ffb8ace0e4, type: 2}
+  m_EnableTreeColliders: 1
+--- !u!218 &959251685
+Terrain:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 959251683}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_TerrainData: {fileID: 15600000, guid: 3d681f1bdc9e37644aaff6ffb8ace0e4, type: 2}
+  m_TreeDistance: 2000
+  m_TreeBillboardDistance: 50
+  m_TreeCrossFadeLength: 5
+  m_TreeMaximumFullLODCount: 50
+  m_DetailObjectDistance: 80
+  m_DetailObjectDensity: 1
+  m_HeightmapPixelError: 5
+  m_SplatMapDistance: 1000
+  m_HeightmapMaximumLOD: 0
+  m_CastShadows: 1
+  m_DrawHeightmap: 1
+  m_DrawTreesAndFoliage: 1
+  m_ReflectionProbeUsage: 1
+  m_MaterialType: 0
+  m_LegacySpecular:
+    serializedVersion: 2
+    rgba: 4286545791
+  m_LegacyShininess: 0.078125
+  m_MaterialTemplate: {fileID: 0}
+  m_BakeLightProbesForTrees: 1
+  m_ScaleInLightmap: 0.0512
+  m_LightmapParameters: {fileID: 15203, guid: 0000000000000000f000000000000000, type: 0}
+--- !u!4 &959251686
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 959251683}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -248, y: -2, z: -223}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 25
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &960653990
 GameObject:
   m_ObjectHideFlags: 0
@@ -6869,7 +6940,7 @@ MonoBehaviour:
   - {fileID: 1478775402893664, guid: fb521ee504663e547920a91f268baf4f, type: 2}
   - {fileID: 1265031108414528, guid: c6dd811eb6047a4439290033768dc9f5, type: 2}
   - {fileID: 1586358945419938, guid: 676363aa8c1b5d84b98ad53eb10e7829, type: 2}
-  movementType: 0
+  movementType: 1
   unitButtonPrefab: {fileID: 1384560270151366, guid: 2d001c0ad1029f24496c73813bd5dbf4,
     type: 2}
   unitButtonMargin: 10
@@ -8505,12 +8576,12 @@ MonoBehaviour:
   enableTeleport: 1
   targetListPolicy: {fileID: 0}
   pointerRenderer: {fileID: 0}
-  activationButton: 10
-  holdButtonToActivate: 1
-  activateOnEnable: 0
+  activationButton: 0
+  holdButtonToActivate: 0
+  activateOnEnable: 1
   activationDelay: 0
   selectionButton: 10
-  selectOnPress: 0
+  selectOnPress: 1
   selectionDelay: 0
   selectAfterHoverDuration: 0
   interactWithObjects: 1
@@ -8531,7 +8602,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 947b27445602ed640b885db7e667dfc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grabButton: 7
+  grabButton: 3
   grabPrecognition: 0
   throwMultiplier: 1
   createRigidBodyWhenNotTouching: 0
@@ -8576,8 +8647,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71b26f999cbdac8478b6c2a046256169, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activationButton: 10
-  activationMode: 0
+  activationButton: 0
+  activationMode: 2
   selectionButton: 3
   clickMethod: 0
   attemptClickOnDeactivate: 0
@@ -9993,8 +10064,7 @@ Transform:
 --- !u!114 &1749559435
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114085069478805808, guid: 41c0760bd81dd084283814f0c432b466,
-    type: 2}
+  m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1749559433}
   m_Enabled: 1
@@ -11287,7 +11357,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400000, guid: b9a3141ae197010409ce53e603363df2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.062
+      value: -0.41
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: b9a3141ae197010409ce53e603363df2, type: 3}
       propertyPath: m_LocalPosition.y
@@ -11295,7 +11365,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: b9a3141ae197010409ce53e603363df2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.42
+      value: 2.46
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: b9a3141ae197010409ce53e603363df2, type: 3}
       propertyPath: m_LocalRotation.x
@@ -11646,7 +11716,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400000, guid: 39bd3e11a959154448baf525ef927b4e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.09
+      value: -0.249
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 39bd3e11a959154448baf525ef927b4e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -11654,7 +11724,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 39bd3e11a959154448baf525ef927b4e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.818
+      value: 2.977
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 39bd3e11a959154448baf525ef927b4e, type: 3}
       propertyPath: m_LocalRotation.x

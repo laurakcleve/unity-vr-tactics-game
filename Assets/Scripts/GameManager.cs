@@ -28,9 +28,9 @@ public class GameManager : MonoBehaviour {
 	public enum movementTypes{
 		walk, grab
 	}
-	public movementTypes movementType;
+    public movementTypes movementType;
 
-	[Header("Unit buttons")]
+    [Header("Unit buttons")]
 	public GameObject unitButtonPrefab;
 	public float unitButtonMargin;
 	public Color unitButtonColor;
@@ -60,6 +60,9 @@ public class GameManager : MonoBehaviour {
 
     public GameObject[] Units {
 		get { return units; } set { units = value; } }
+
+    public movementTypes MovementType { 
+		get { return movementType; } set { movementType = value; } }
 
 
     /* AWAKE
@@ -191,13 +194,9 @@ public class GameManager : MonoBehaviour {
 				0
 			);
 
-			if (movementType == movementTypes.grab) {
-				unitInstanceScript.GetComponent<VRTK_InteractableObject>().isGrabbable = true;
-			}
-
 			unitInstance.name = "Unit " + (i+1);
 
-			unitInstanceScript.currentTile = tiles[x,z];
+			unitInstanceScript.CurrentTile = tiles[x,z];
 
 			Units[i] = unitInstance;
 
@@ -239,6 +238,7 @@ public class GameManager : MonoBehaviour {
 
 		// Clean up turn
 		Units[ActiveUnit].GetComponent<Unit>().HideValidMoves();
+		Units[ActiveUnit].GetComponent<VRTK_InteractableObject>().isGrabbable = false;
 
 		SetButtonColor(unitButtons[ActiveUnit], unitButtonColor);
 

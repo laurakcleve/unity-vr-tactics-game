@@ -53,7 +53,7 @@ public class Tile : MonoBehaviour {
 	-------------------------------------------------------- */
 	void MoveUnitHere(object sender, InteractableObjectEventArgs e) {
         Unit unitScript = gm.Units[gm.ActiveUnit].GetComponent<Unit>();
-        List<Tile> path = GetComponent<Pathfinding>().FindPath(unitScript.currentTile.GetComponent<Tile>(), this);
+        List<Tile> path = GetComponent<Pathfinding>().FindPath(unitScript.CurrentTile.GetComponent<Tile>(), this);
 		unitScript.MoveToTile(gameObject, path);
 	}
 

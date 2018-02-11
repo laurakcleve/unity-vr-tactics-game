@@ -3381,7 +3381,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1764336778793232}
-  m_LocalRotation: {x: -0.09374654, y: 0.6978552, z: 0.70746905, w: 0.06080673}
+  m_LocalRotation: {x: -0.09374654, y: 0.6978552, z: 0.70746905, w: 0.06080672}
   m_LocalPosition: {x: -0.05543403, y: 0.0017306843, z: 0.098653734}
   m_LocalScale: {x: 1.0000004, y: 1.0000006, z: 1.0000005}
   m_Children:
@@ -5086,7 +5086,7 @@ Animator:
   m_GameObject: {fileID: 1478775402893664}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 8f0565f23a2b58541a475bd3c1393052, type: 3}
-  m_Controller: {fileID: 9100000, guid: 83cc6b8afed25974296755a2af955064, type: 2}
+  m_Controller: {fileID: 9100000, guid: da857337c8da5304385d84ed3f867710, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -5118,7 +5118,7 @@ MonoBehaviour:
   allowedGrabControllers: 0
   grabAttachMechanicScript: {fileID: 0}
   secondaryGrabActionScript: {fileID: 0}
-  isUsable: 0
+  isUsable: 1
   holdButtonToUse: 1
   useOnlyIfGrabbed: 0
   pointerActivatesUseAction: 0
@@ -5140,8 +5140,10 @@ MonoBehaviour:
   startingX: 5
   startingZ: 1
   rotation: 0
-  move: 3
-  currentTile: {fileID: 0}
+  moveRange: 3
+  attackRange: 1
+  moveTime: 0.5
+  receiveAttackDelay: 0.7
 --- !u!114 &114554478968727834
 MonoBehaviour:
   m_ObjectHideFlags: 1

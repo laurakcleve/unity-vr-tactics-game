@@ -36,6 +36,10 @@ public class GameManager : MonoBehaviour {
 	public Color unitButtonColor;
 	public Color unitButtonColorActive;
 
+	[Header("Other buttons")]
+	public Button moveButton;
+	public Button attackButton;
+
 
 	private GameObject[,] tiles;
 	private GameObject[] units;
@@ -111,6 +115,8 @@ public class GameManager : MonoBehaviour {
 				) as GameObject;
 
 				tileInstance.GetComponent<Renderer>().enabled = false;
+				
+				tileInstance.GetComponent<VRTK_InteractableObject>().isUsable = false;
 
 
 				// Shoot the tiles down onto the stage
@@ -235,10 +241,8 @@ public class GameManager : MonoBehaviour {
     /* END TURN
 	-------------------------------------------------------- */
     public void EndTurn() {
-
-		// Clean up turn
-		Units[ActiveUnit].GetComponent<Unit>().HideValidMoves();
-		Units[ActiveUnit].GetComponent<VRTK_InteractableObject>().isGrabbable = false;
+		moveButton.onClick.RemoveAllListeners();
+		attackButton.onClick.RemoveAllListeners();
 
 		SetButtonColor(unitButtons[ActiveUnit], unitButtonColor);
 

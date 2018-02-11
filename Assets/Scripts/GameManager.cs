@@ -243,6 +243,7 @@ public class GameManager : MonoBehaviour {
     public void EndTurn() {
 		moveButton.onClick.RemoveAllListeners();
 		attackButton.onClick.RemoveAllListeners();
+		Units[ActiveUnit].transform.Find("Highlight").gameObject.SetActive(false);
 
 		SetButtonColor(unitButtons[ActiveUnit], unitButtonColor);
 

@@ -58,6 +58,8 @@ public class Unit : MonoBehaviour {
 		
 		moveButton.interactable = true;
 		attackButton.interactable = true;
+
+		gameObject.transform.Find("Highlight").gameObject.SetActive(true);
 	}
 
 

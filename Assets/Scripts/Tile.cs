@@ -15,6 +15,7 @@ public class Tile : MonoBehaviour {
     private int hCost;
     private int fCost;
     private Tile parent;
+    private GameObject currentUnit;
 
     public int X { 
 		get { return x; } set { x = value; } }
@@ -36,6 +37,9 @@ public class Tile : MonoBehaviour {
 
     public Tile Parent { 
         get { return parent; } set { parent = value; } }
+
+    public GameObject CurrentUnit {
+        get { return currentUnit; } set { currentUnit = value; } }
 
 
 

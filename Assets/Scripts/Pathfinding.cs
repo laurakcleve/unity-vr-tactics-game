@@ -15,13 +15,9 @@ public class Pathfinding : MonoBehaviour {
 		List<Tile> path = new List<Tile>();
 
 		start.SetCosts(start, end);
-
 		openSet.Add(start);
 
-
-		// loop
 		while (openSet.Count > 0) {
-			// current = node in openSet with the lowest fCost
 			Tile current = openSet[0];
 			for (int i = 1; i < openSet.Count; i++) {
 				if (openSet[i].FCost < current.FCost) {
@@ -29,25 +25,18 @@ public class Pathfinding : MonoBehaviour {
 				}
 			}
 
-			// remove current from openSet
 			openSet.Remove(current);
-			// add current to closedSet
 			closedSet.Add(current);
 
-			// if current is the target node, path has been found
-				// return
 			if (current == end) {
 				return RetracePath(start, end);
 			}
 
-			// foreach neighbor of the current node
 			foreach (GameObject tile in current.connected) {
 				
 				Tile tileScript = tile.GetComponent<Tile>();
 				
-				// if neighbor is not walkable or neighbor is in closedSet
 				if (closedSet.Contains(tileScript)) {
-					// skip to the next neighbor
 					continue;
 				}
 

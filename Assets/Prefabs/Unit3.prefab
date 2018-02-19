@@ -564,14 +564,14 @@ GameObject:
   m_Component:
   - component: {fileID: 4878859337516544}
   - component: {fileID: 95086421611095716}
-  - component: {fileID: 114694387600262494}
   - component: {fileID: 114593919731896474}
   - component: {fileID: 65853770793577116}
   - component: {fileID: 54051191413233108}
   - component: {fileID: 114581046467848280}
+  - component: {fileID: 114411855513918900}
   m_Layer: 0
   m_Name: Unit3
-  m_TagString: Unit
+  m_TagString: PlayerUnit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4826,7 +4826,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1595781545958862}
-  m_LocalRotation: {x: -0.09374654, y: 0.6978552, z: 0.70746905, w: 0.060806714}
+  m_LocalRotation: {x: -0.093746535, y: 0.6978551, z: 0.707469, w: 0.060806707}
   m_LocalPosition: {x: -0.05543403, y: 0.0017306843, z: 0.098653734}
   m_LocalScale: {x: 1.0000004, y: 1.0000006, z: 1.0000005}
   m_Children:
@@ -5160,6 +5160,24 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &114411855513918900
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1265031108414528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff8a2e5170b81254983872b41e33c88c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startingX: 4
+  startingZ: 8
+  startingRotation: 180
+  moveRange: 5
+  attackRange: 1
+  moveTime: 0.5
+  receiveAttackDelay: 0.7
 --- !u!114 &114581046467848280
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5211,24 +5229,6 @@ MonoBehaviour:
   allowedUseControllers: 0
   objectHighlighter: {fileID: 0}
   usingState: 0
---- !u!114 &114694387600262494
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1265031108414528}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02233d5d78ce9fb4b9c27adee0771707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startingX: 4
-  startingZ: 8
-  rotation: 180
-  moveRange: 5
-  attackRange: 1
-  moveTime: 0.5
-  receiveAttackDelay: 0.7
 --- !u!137 &137081796311464958
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

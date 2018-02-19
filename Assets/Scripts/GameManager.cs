@@ -47,6 +47,7 @@ public class GameManager : MonoBehaviour {
 	private GameObject unitListCanvas;
 	private int round;
 	private int activeUnit;
+	public GameObject actionCanvas;
 
     public int ActiveUnit {
 		get {
@@ -67,6 +68,11 @@ public class GameManager : MonoBehaviour {
 
     public movementTypes MovementType { 
 		get { return movementType; } set { movementType = value; } }
+
+	public GameObject ActionCanvas {
+		get { return actionCanvas; } set { actionCanvas = value; } }
+
+		//some comment
 
 
     /* AWAKE
@@ -196,13 +202,14 @@ public class GameManager : MonoBehaviour {
 
 			unitInstance.transform.eulerAngles = new Vector3(
 				0,
-				unitInstanceScript.rotation,
+				unitInstanceScript.startingRotation,
 				0
 			);
 
 			unitInstance.name = "Unit " + (i+1);
 
 			unitInstanceScript.CurrentTile = tiles[x,z];
+			tiles[x,z].GetComponent<Tile>().CurrentUnit = unitInstance;
 
 			Units[i] = unitInstance;
 
@@ -243,6 +250,7 @@ public class GameManager : MonoBehaviour {
     public void EndTurn() {
 		moveButton.onClick.RemoveAllListeners();
 		attackButton.onClick.RemoveAllListeners();
+		// ActionCanvas.SetActive(false);
 		Units[ActiveUnit].transform.Find("Highlight").gameObject.SetActive(false);
 
 		SetButtonColor(unitButtons[ActiveUnit], unitButtonColor);

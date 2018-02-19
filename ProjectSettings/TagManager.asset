@@ -13,6 +13,8 @@ TagManager:
   - Arm
   - Leg
   - Unit
+  - PlayerUnit
+  - AIUnit
   layers:
   - Default
   - TransparentFX

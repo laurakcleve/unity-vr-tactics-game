@@ -13,7 +13,7 @@ public class PlayerUnit : Unit {
 
         interactable.InteractableObjectGrabbed += new InteractableObjectEventHandler(ShowValidTilesOnGrab);
         interactable.InteractableObjectUngrabbed += new InteractableObjectEventHandler(HideValidTilesOnUngrab);
-        interactable.InteractableObjectUsed += new InteractableObjectEventHandler(ReturnThisUnit);
+        
         
         
     }
@@ -86,7 +86,7 @@ public class PlayerUnit : Unit {
         }
     }
 
-    protected override void Attack(GameObject otherUnit) {
+    public override void Attack(GameObject otherUnit) {
         base.Attack(otherUnit);
         HideValidTiles(validAttacks);
         attackButton.interactable = false;

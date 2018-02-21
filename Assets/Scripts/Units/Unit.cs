@@ -26,6 +26,9 @@ public class Unit : MonoBehaviour {
 	protected bool attackActive = false;
 	protected GameManager gm;
 	protected GameObject targetUnit;
+	protected bool moveComplete;
+	protected float attackAnimationLength;
+	protected float receiveAttackAnimationLength;
 
     public GameObject CurrentTile { 
 		get { return currentTile; } set { currentTile = value; } }
@@ -33,7 +36,21 @@ public class Unit : MonoBehaviour {
 
     protected virtual void Awake() {
         gm = GameManager.instance;
+
+        VRTK_InteractableObject interactable = GetComponent<VRTK_InteractableObject>();
+
+        interactable.InteractableObjectUsed += new InteractableObjectEventHandler(ReturnThisUnit);
+
         animator = GetComponent<Animator>();
+        RuntimeAnimatorController ac = animator.runtimeAnimatorController;
+        for (int i = 0; i < ac.animationClips.Length; i++) {
+            if (ac.animationClips[i].name == "WAIT04") {
+                attackAnimationLength = ac.animationClips[i].length / 1.5f;
+            }
+			if (ac.animationClips[i].name == "DAMAGED00") {
+				receiveAttackAnimationLength = ac.animationClips[i].length;
+			}
+        }
 		// gm.ActionCanvas.SetActive(false);
 	} 
 
@@ -88,27 +105,21 @@ public class Unit : MonoBehaviour {
         {
             Tile currentTileScript = CurrentTile.GetComponent<Tile>();
             Tile targetTileScript = tile.GetComponent<Tile>();
-            if ((Mathf.Abs(targetTileScript.X - currentTileScript.X) + Mathf.Abs(targetTileScript.Z - currentTileScript.Z) <= attackRange) && !validAttacks.Contains(tile))
-            {
+            if ((Mathf.Abs(targetTileScript.X - currentTileScript.X) + Mathf.Abs(targetTileScript.Z - currentTileScript.Z) <= attackRange) && !validAttacks.Contains(tile)) {
                 GetValidAttacks(tile);
             }
         }
-
         return validAttacks;
     }
 
-    protected void ShowValidTiles(List<GameObject> tiles)
-    {
-        foreach (GameObject tile in tiles)
-        {
+    protected void ShowValidTiles(List<GameObject> tiles) {
+        foreach (GameObject tile in tiles) {
             tile.GetComponent<Renderer>().enabled = true;
         }
     }
 
-    public void HideValidTiles(List<GameObject> tiles)
-    {
-        foreach (GameObject tile in tiles)
-        {
+    public void HideValidTiles(List<GameObject> tiles) {
+        foreach (GameObject tile in tiles) {
             tile.GetComponent<Renderer>().enabled = false;
         }
     }
@@ -123,83 +134,81 @@ public class Unit : MonoBehaviour {
 
 	protected virtual IEnumerator AnimateMove(List<Tile> path) {
         animator.SetBool("moving", true);
+		moveComplete = false;
 
         foreach (Tile tile in path) {
-
-			// face next tile
-
 			Tile thisTile = currentTile.GetComponent<Tile>();
 			int rotation = 0;
 
-			if (tile.Z > thisTile.Z) {
-				rotation = 0;
-			}
-			else if (tile.Z < thisTile.Z) {
-				rotation = 180;
-			}
-			else if (tile.X > thisTile.X) {
-				rotation = 90;
-			}
-			else{
-				rotation = 270;
-			}
+			if (tile.Z > thisTile.Z) 		rotation = 0;
+			else if (tile.Z < thisTile.Z) 	rotation = 180;
+			else if (tile.X > thisTile.X)	rotation = 90;
+			else							rotation = 270;
 
 			gameObject.transform.eulerAngles = new Vector3(0, rotation, 0);
-
-			if (tile.Height > thisTile.Height + 0.5f || tile.Height < thisTile.Height - 0.5f) {
-				animator.SetTrigger("jump");
-			}
-
 
 			float time = moveTime;
 			float elapsedTime = 0;
 			Vector3 startingPos = transform.position;
-			while (elapsedTime < time)
-			{
-				transform.position = Vector3.Lerp(
-					startingPos,
-					tile.gameObject.transform.position,
-					(elapsedTime / time)
-				);
-				elapsedTime += Time.deltaTime;
-				yield return null;
-			}
+            while (elapsedTime < time) {
+                transform.position = Vector3.Lerp(
+                    startingPos,
+                    tile.gameObject.transform.position,
+                    (elapsedTime / time)
+                );
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
             currentTile = tile.gameObject;
         }
 		animator.SetBool("moving", false);
-        
+		moveComplete = true;
         CurrentTile.GetComponent<Tile>().CurrentUnit = gameObject;
 	}
 
-	protected void ReturnThisUnit(object sender, InteractableObjectEventArgs e) {
+
+	/* RETURN THIS UNIT
+	-------------------------------------------------------- */
+    // Event registered in Unit.Awake()
+    // Handles the selection of the unit to attack, calls the active unit's Attack() function
+
+    protected void ReturnThisUnit(object sender, InteractableObjectEventArgs e) {
 		gm.Units[gm.ActiveUnit].GetComponent<Unit>().Attack(this.gameObject);
 	}
 
-	protected virtual void Attack(GameObject otherUnit) {
+
+
+	/* ATTACK
+	-------------------------------------------------------- */
+	// Turns toward the target unit and plays the attack animation
+	// Calls other unit's ReceiveAttack() function
+
+	public virtual void Attack(GameObject otherUnit) {
+		Debug.Log("Attack called");
 		targetUnit = otherUnit;
-		if (validAttacks.Contains(targetUnit.GetComponent<Unit>().CurrentTile)) {
+		Tile thisTile = CurrentTile.GetComponent<Tile>();
+		Tile otherTile = targetUnit.GetComponent<Unit>().CurrentTile.GetComponent<Tile>();
+
+		if (validAttacks.Contains(otherTile.gameObject)) {
 			int rotation = 0;
 
-            if (CurrentTile.GetComponent<Tile>().Z > targetUnit.GetComponent<Unit>().CurrentTile.GetComponent<Tile>().Z) {
-                rotation = 180;
-            }
-            else if (CurrentTile.GetComponent<Tile>().Z < targetUnit.GetComponent<Unit>().CurrentTile.GetComponent<Tile>().Z) {
-                rotation = 0;
-            }
-            else if (CurrentTile.GetComponent<Tile>().X > targetUnit.GetComponent<Unit>().CurrentTile.GetComponent<Tile>().X) {
-                rotation = 270;
-            }
-            else {
-                rotation = 90;
-            }
+            if (thisTile.Z > otherTile.Z) 		rotation = 180;
+            else if (thisTile.Z < otherTile.Z) 	rotation = 0;
+            else if (thisTile.X > otherTile.X) 	rotation = 270;
+            else	 							rotation = 90;
 
             gameObject.transform.eulerAngles = new Vector3(0, rotation, 0);
 
 			animator.SetTrigger("attack");
 			otherUnit.GetComponent<Unit>().ReceiveAttack();
-			attackActive = false;
+			hasActed = true;
+			// StartCoroutine(AnimateAttack(otherUnit));
 		}
 	}
+
+	// protected IEnumerator AnimateAttack(GameObject otherUnit) {
+	// 	yield return null;
+	// }
 
 	public void ReceiveAttack() {
 		StartCoroutine(AnimateReceiveAttack());

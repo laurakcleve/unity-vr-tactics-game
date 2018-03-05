@@ -13,8 +13,9 @@ public class Unit : MonoBehaviour {
 	public int attackRange;
     public float moveTime = .5f;
 	public float receiveAttackDelay = .7f;
+    public GameObject currentTile;
 
-    protected GameObject currentTile;
+	protected GameObject tempCurrentTile;
 	protected List<GameObject> validMoves;
 	protected List<GameObject> validAttacks;
 	protected bool hasMoved = false;
@@ -22,23 +23,20 @@ public class Unit : MonoBehaviour {
 	protected Animator animator;
 	protected Button moveButton;
 	protected Button attackButton;
-	protected bool moveActive = false;
-	protected bool attackActive = false;
 	protected GameManager gm;
 	protected GameObject targetUnit;
-	protected bool moveComplete;
+	protected bool moveAnimationComplete;
 	protected float attackAnimationLength;
 	protected float receiveAttackAnimationLength;
+    protected int currentRotation;
+	protected int tempCurrentRotation;
 
-    public GameObject CurrentTile { 
-		get { return currentTile; } set { currentTile = value; } }
 
 
     protected virtual void Awake() {
         gm = GameManager.instance;
 
         VRTK_InteractableObject interactable = GetComponent<VRTK_InteractableObject>();
-
         interactable.InteractableObjectUsed += new InteractableObjectEventHandler(ReturnThisUnit);
 
         animator = GetComponent<Animator>();
@@ -51,34 +49,30 @@ public class Unit : MonoBehaviour {
 				receiveAttackAnimationLength = ac.animationClips[i].length;
 			}
         }
-		// gm.ActionCanvas.SetActive(false);
+
+        currentRotation = startingRotation;
 	} 
 
     public virtual void TakeTurn() {
 		hasMoved = false;
 		hasActed = false;
-		moveActive = false;
-		attackActive = false;
-
 		gameObject.transform.Find("Highlight").gameObject.SetActive(true);
 	}
 
 	public virtual void ActivateMove() {
 		validMoves = new List<GameObject>();
-		validMoves = GetValidMoves(CurrentTile);
-		moveActive = true;
+		validMoves = GetValidMoves(currentTile);
 	}
 
 	public virtual void ActivateAttack() {
 		validAttacks = new List<GameObject>();
-		validAttacks = GetValidAttacks(CurrentTile);
-		attackActive = true;
+		validAttacks = GetValidAttacks(currentTile);
 	}
 
 	protected List<GameObject> GetValidMoves(GameObject startTile) {
 		validMoves = CheckNextTile(startTile);
 		foreach (GameObject unit in gm.Units) {
-			validMoves.Remove(unit.GetComponent<Unit>().CurrentTile);
+			validMoves.Remove(unit.GetComponent<Unit>().currentTile);
 		}
 		return validMoves;
 	}
@@ -87,7 +81,7 @@ public class Unit : MonoBehaviour {
         validMoves.Add(startTile);
         List<GameObject> connectedTiles = startTile.GetComponent<Tile>().connected;
         foreach (GameObject tile in connectedTiles) {
-            Tile currentTileScript = CurrentTile.GetComponent<Tile>();
+            Tile currentTileScript = currentTile.GetComponent<Tile>();
             Tile targetTileScript = tile.GetComponent<Tile>();
             if ((Mathf.Abs(targetTileScript.X - currentTileScript.X) + Mathf.Abs(targetTileScript.Z - currentTileScript.Z) <= moveRange) && !validMoves.Contains(tile)) {
                 CheckNextTile(tile);
@@ -103,7 +97,7 @@ public class Unit : MonoBehaviour {
         List<GameObject> connectedTiles = startTile.GetComponent<Tile>().connected;
         foreach (GameObject tile in connectedTiles)
         {
-            Tile currentTileScript = CurrentTile.GetComponent<Tile>();
+            Tile currentTileScript = currentTile.GetComponent<Tile>();
             Tile targetTileScript = tile.GetComponent<Tile>();
             if ((Mathf.Abs(targetTileScript.X - currentTileScript.X) + Mathf.Abs(targetTileScript.Z - currentTileScript.Z) <= attackRange) && !validAttacks.Contains(tile)) {
                 GetValidAttacks(tile);
@@ -125,25 +119,21 @@ public class Unit : MonoBehaviour {
     }
 
 	public virtual void MoveToTile(GameObject destinationTile, List<Tile> path) {
-        CurrentTile.GetComponent<Tile>().CurrentUnit = null;
 		StartCoroutine(AnimateMove(path));
-        // CurrentTile = destinationTile;
-		hasMoved = true;
-		moveActive = false;
 	}
 
 	protected virtual IEnumerator AnimateMove(List<Tile> path) {
         animator.SetBool("moving", true);
-		moveComplete = false;
+		moveAnimationComplete = false;
+		Tile thisTile = currentTile.GetComponent<Tile>();
+		int rotation = 0;
 
-        foreach (Tile tile in path) {
-			Tile thisTile = currentTile.GetComponent<Tile>();
-			int rotation = 0;
+        foreach (Tile nextTile in path) {
 
-			if (tile.Z > thisTile.Z) 		rotation = 0;
-			else if (tile.Z < thisTile.Z) 	rotation = 180;
-			else if (tile.X > thisTile.X)	rotation = 90;
-			else							rotation = 270;
+			if (nextTile.Z > thisTile.Z) 		rotation = 0;
+			else if (nextTile.Z < thisTile.Z) 	rotation = 180;
+			else if (nextTile.X > thisTile.X)	rotation = 90;
+			else								rotation = 270;
 
 			gameObject.transform.eulerAngles = new Vector3(0, rotation, 0);
 
@@ -153,18 +143,23 @@ public class Unit : MonoBehaviour {
             while (elapsedTime < time) {
                 transform.position = Vector3.Lerp(
                     startingPos,
-                    tile.gameObject.transform.position,
+                    nextTile.gameObject.transform.position,
                     (elapsedTime / time)
                 );
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
-            currentTile = tile.gameObject;
+            thisTile = nextTile;
         }
+		tempCurrentRotation = rotation;
+		tempCurrentTile = thisTile.gameObject;
 		animator.SetBool("moving", false);
-		moveComplete = true;
-        CurrentTile.GetComponent<Tile>().CurrentUnit = gameObject;
+		moveAnimationComplete = true;
+		FinishMove();
 	}
+
+	protected virtual void FinishMove() {}
+
 
 
 	/* RETURN THIS UNIT
@@ -184,10 +179,9 @@ public class Unit : MonoBehaviour {
 	// Calls other unit's ReceiveAttack() function
 
 	public virtual void Attack(GameObject otherUnit) {
-		Debug.Log("Attack called");
 		targetUnit = otherUnit;
-		Tile thisTile = CurrentTile.GetComponent<Tile>();
-		Tile otherTile = targetUnit.GetComponent<Unit>().CurrentTile.GetComponent<Tile>();
+		Tile thisTile = currentTile.GetComponent<Tile>();
+		Tile otherTile = targetUnit.GetComponent<Unit>().currentTile.GetComponent<Tile>();
 
 		if (validAttacks.Contains(otherTile.gameObject)) {
 			int rotation = 0;

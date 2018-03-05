@@ -30,24 +30,20 @@ public class GameManager : MonoBehaviour {
 	}
     public movementTypes movementType;
 
-    [Header("Unit buttons")]
-	public GameObject unitButtonPrefab;
-	public float unitButtonMargin;
-	public Color unitButtonColor;
-	public Color unitButtonColorActive;
-
 	[Header("Other buttons")]
+	public GameObject actionCanvas;
 	public Button moveButton;
 	public Button attackButton;
+	public GameObject confirmCanvas;
+	public GameObject cancelCanvas;
+	public Button confirmButton;
+	public Button cancelButton;
 
 
 	private GameObject[,] tiles;
 	private GameObject[] units;
-	private GameObject[] unitButtons;
-	private GameObject unitListCanvas;
 	private int round;
 	private int activeUnit;
-	public GameObject actionCanvas;
 
     public int ActiveUnit {
 		get {
@@ -66,14 +62,6 @@ public class GameManager : MonoBehaviour {
     public GameObject[] Units {
 		get { return units; } set { units = value; } }
 
-    public movementTypes MovementType { 
-		get { return movementType; } set { movementType = value; } }
-
-	public GameObject ActionCanvas {
-		get { return actionCanvas; } set { actionCanvas = value; } }
-
-		//some comment
-
 
     /* AWAKE
 	-------------------------------------------------------- */
@@ -85,15 +73,11 @@ public class GameManager : MonoBehaviour {
             Destroy(this);
         }
 
-		unitListCanvas = GameObject.Find("UnitListCanvas");
-
 		tiles = CreateTiles();
 		CreateUnits();
-		CreateUnitButtons();
 
 		ActiveUnit = 0;
         round = 1;
-		SetButtonColor(unitButtons[ActiveUnit], unitButtonColorActive);
         Units[ActiveUnit].GetComponent<Unit>().TakeTurn();
 	}
 
@@ -182,7 +166,6 @@ public class GameManager : MonoBehaviour {
     void CreateUnits() {
 
 		Units = new GameObject[unitPrefabs.Length];
-		unitButtons = new GameObject[unitPrefabs.Length];
 
 		for (int i = 0; i < unitPrefabs.Length; i++) {
 
@@ -208,7 +191,7 @@ public class GameManager : MonoBehaviour {
 
 			unitInstance.name = "Unit " + (i+1);
 
-			unitInstanceScript.CurrentTile = tiles[x,z];
+			unitInstanceScript.currentTile = tiles[x,z];
 			tiles[x,z].GetComponent<Tile>().CurrentUnit = unitInstance;
 
 			Units[i] = unitInstance;
@@ -218,46 +201,17 @@ public class GameManager : MonoBehaviour {
 	}
 
 
-	/* CREATE UNIT BUTTONS
-	-------------------------------------------------------- */
-	void CreateUnitButtons() {
-
-		for (int i = 0; i < Units.Length; i++) {
-
-			GameObject unitButtonInstance = Instantiate(unitButtonPrefab) as GameObject;
-			unitButtonInstance.transform.SetParent(unitListCanvas.transform, false);
-			
-			RectTransform buttonRect = unitButtonInstance.GetComponent<RectTransform>();
-			float buttonHeight = buttonRect.rect.height;
-			float posX = buttonRect.anchoredPosition.x;
-			float posY = buttonRect.anchoredPosition.y - (i * (buttonHeight + unitButtonMargin));
-			buttonRect.anchoredPosition = new Vector2(posX, posY);
-
-            // Set button text
-
-            unitButtonInstance.transform.GetComponentInChildren<Text>().text = Units[i].name;
-            unitButtonInstance.name = Units[i].name + " button";
-
-			SetButtonColor(unitButtonInstance, unitButtonColor);
-
-            unitButtons[i] = unitButtonInstance;
-		}
-	}
-
-
     /* END TURN
 	-------------------------------------------------------- */
     public void EndTurn() {
 		moveButton.onClick.RemoveAllListeners();
 		attackButton.onClick.RemoveAllListeners();
-		// ActionCanvas.SetActive(false);
+		actionCanvas.SetActive(false);
 		Units[ActiveUnit].transform.Find("Highlight").gameObject.SetActive(false);
 
-		SetButtonColor(unitButtons[ActiveUnit], unitButtonColor);
 
         if (round < totalRounds) {
             ActiveUnit++;
-			SetButtonColor(unitButtons[ActiveUnit], unitButtonColorActive);
             Units[ActiveUnit].GetComponent<Unit>().TakeTurn();
         }
     }

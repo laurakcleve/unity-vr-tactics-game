@@ -47,9 +47,8 @@ public class Tile : MonoBehaviour {
     /* AWAKE
     -------------------------------------------------------- */
     void Awake() {
-		GetComponent<VRTK_InteractableObject>().InteractableObjectUsed += new InteractableObjectEventHandler(MoveUnitHere);
-
 		gm = GameManager.instance;
+		GetComponent<VRTK_InteractableObject>().InteractableObjectUsed += new InteractableObjectEventHandler(MoveUnitHere);
 	}
 
 
@@ -57,7 +56,7 @@ public class Tile : MonoBehaviour {
 	-------------------------------------------------------- */
 	void MoveUnitHere(object sender, InteractableObjectEventArgs e) {
         Unit unitScript = gm.Units[gm.ActiveUnit].GetComponent<Unit>();
-        List<Tile> path = GetComponent<Pathfinding>().FindPath(unitScript.CurrentTile.GetComponent<Tile>(), this);
+        List<Tile> path = GetComponent<Pathfinding>().FindPath(unitScript.currentTile.GetComponent<Tile>(), this);
 		unitScript.MoveToTile(gameObject, path);
 	}
 

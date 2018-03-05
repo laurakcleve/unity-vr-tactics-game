@@ -5,53 +5,91 @@ using UnityEngine.UI;
 using VRTK;
 
 public class PlayerUnit : Unit {
-
+    
     protected override void Awake() {
         base.Awake();
 
+        // Grab mode not updated
         VRTK_InteractableObject interactable = GetComponent<VRTK_InteractableObject>();
-
         interactable.InteractableObjectGrabbed += new InteractableObjectEventHandler(ShowValidTilesOnGrab);
         interactable.InteractableObjectUngrabbed += new InteractableObjectEventHandler(HideValidTilesOnUngrab);
-        
-        
-        
     }
 
     public override void TakeTurn() {
-        // gm.ActionCanvas.SetActive(true);
-        // gm.ActionCanvas.GetComponent<GraphicRaycaster>().enabled = true;
-        moveButton = GameObject.Find("MoveButton").GetComponent<Button>();
-        attackButton = GameObject.Find("AttackButton").GetComponent<Button>();
         base.TakeTurn();
-
-
-        moveButton.onClick.AddListener(ActivateMove);
-        attackButton.onClick.AddListener(ActivateAttack);
-
-        moveButton.interactable = true;
-        attackButton.interactable = true;
+        gm.actionCanvas.SetActive(true);
+        gm.moveButton.onClick.AddListener(ActivateMove);
+        gm.attackButton.onClick.AddListener(ActivateAttack);
+        gm.moveButton.interactable = true;
+        gm.attackButton.interactable = true;
     }
 
     public override void ActivateMove() {
         if (!hasMoved) {
             base.ActivateMove();
-
-            if (GameManager.instance.MovementType == GameManager.movementTypes.grab) {
-                GetComponent<VRTK_InteractableObject>().isGrabbable = true;
-            }
-
             ShowValidTiles(validMoves);
             ActivateMoveTiles();
-            moveActive = true;
+            gm.actionCanvas.SetActive(false);
+            gm.cancelCanvas.SetActive(true);
+            gm.confirmButton.onClick.AddListener(ConfirmMove);
+            gm.cancelButton.onClick.AddListener(CancelMove);
+
+            // Grab mode not updated
+            if (GameManager.instance.movementType == GameManager.movementTypes.grab) {
+                GetComponent<VRTK_InteractableObject>().isGrabbable = true;
+            }
         }
     }
+
+    public override void MoveToTile(GameObject destinationTile, List<Tile> path) {
+        if (!hasMoved) {
+            HideValidTiles(validMoves);
+            gm.confirmCanvas.SetActive(false);
+            gm.cancelCanvas.SetActive(false);
+            base.MoveToTile(destinationTile, path);
+        }
+    }
+
+    protected override void FinishMove() {
+        gm.confirmCanvas.SetActive(true);
+        gm.cancelCanvas.SetActive(true);
+    }
+
+    private void ConfirmMove() {
+        gm.confirmCanvas.SetActive(false);
+        gm.cancelCanvas.SetActive(false);
+        gm.actionCanvas.SetActive(true);
+        DeactivateMoveTiles();
+        gm.moveButton.interactable = false;
+        hasMoved = true;
+        currentRotation = tempCurrentRotation;
+        currentTile.GetComponent<Tile>().CurrentUnit = null;
+        currentTile = tempCurrentTile;
+        currentTile.GetComponent<Tile>().CurrentUnit = gameObject;
+
+        // Grab mode not updated
+        GetComponent<VRTK_InteractableObject>().isGrabbable = false;
+    }
+
+    private void CancelMove() {
+        transform.position = currentTile.transform.position;
+        transform.eulerAngles = new Vector3(0, currentRotation, 0);
+        gm.confirmCanvas.SetActive(false);
+        gm.cancelCanvas.SetActive(false);
+        gm.actionCanvas.SetActive(true);
+        HideValidTiles(validMoves);
+        DeactivateMoveTiles();
+    }
+
+     
 
     public override void ActivateAttack() {
         if (!hasActed) {
             base.ActivateAttack();
             
             ShowValidTiles(validAttacks);
+            // hide action canvas
+            // show confirm/cancel canvas
         }
     }
 
@@ -75,21 +113,12 @@ public class PlayerUnit : Unit {
         HideValidTiles(validMoves);
     }
 
-    public override void MoveToTile(GameObject destinationTile, List<Tile> path) {
-        if (!hasMoved) {
-            base.MoveToTile(destinationTile, path);
-
-            HideValidTiles(validMoves);
-            DeactivateMoveTiles();
-            moveButton.interactable = false;
-            GetComponent<VRTK_InteractableObject>().isGrabbable = false;
-        }
-    }
+    
 
     public override void Attack(GameObject otherUnit) {
         base.Attack(otherUnit);
         HideValidTiles(validAttacks);
-        attackButton.interactable = false;
+        gm.attackButton.interactable = false;
     }
 
 }

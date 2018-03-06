@@ -66,6 +66,8 @@ public class PlayerUnit : Unit {
         currentTile.GetComponent<Tile>().CurrentUnit = null;
         currentTile = tempCurrentTile;
         currentTile.GetComponent<Tile>().CurrentUnit = gameObject;
+        gm.confirmButton.onClick.RemoveAllListeners();
+        gm.cancelButton.onClick.RemoveAllListeners();
 
         // Grab mode not updated
         GetComponent<VRTK_InteractableObject>().isGrabbable = false;
@@ -81,16 +83,42 @@ public class PlayerUnit : Unit {
         DeactivateMoveTiles();
     }
 
-     
-
     public override void ActivateAttack() {
         if (!hasActed) {
             base.ActivateAttack();
             
             ShowValidTiles(validAttacks);
-            // hide action canvas
-            // show confirm/cancel canvas
+            gm.actionCanvas.SetActive(false);
+            gm.cancelCanvas.SetActive(true);
+            gm.cancelButton.onClick.AddListener(CancelAttack);
+            gm.confirmButton.onClick.AddListener(ConfirmAttack);
         }
+    }
+
+    private void CancelAttack() {
+        gm.cancelCanvas.SetActive(false);
+        gm.confirmCanvas.SetActive(false);
+        gm.actionCanvas.SetActive(true);
+        HideValidTiles(validAttacks);
+    }
+
+    public override void AskConfirmAttack(GameObject otherUnit) {
+        gm.confirmCanvas.SetActive(true);
+        targetUnit = otherUnit;
+    }
+
+    private void ConfirmAttack() {
+        gm.confirmCanvas.SetActive(false);
+        gm.cancelCanvas.SetActive(false);
+        gm.confirmButton.onClick.RemoveAllListeners();
+        gm.cancelButton.onClick.RemoveAllListeners();
+        Attack(targetUnit);
+        StartCoroutine(AnimateAttack());
+    }
+
+    private IEnumerator AnimateAttack() {
+        yield return new WaitForSeconds(attackWaitTime);
+        gm.actionCanvas.SetActive(true);
     }
 
     private void ActivateMoveTiles() {
@@ -112,8 +140,6 @@ public class PlayerUnit : Unit {
     private void HideValidTilesOnUngrab(object sender, InteractableObjectEventArgs e) {
         HideValidTiles(validMoves);
     }
-
-    
 
     public override void Attack(GameObject otherUnit) {
         base.Attack(otherUnit);

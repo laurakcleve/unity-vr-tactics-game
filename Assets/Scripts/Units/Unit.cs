@@ -30,6 +30,7 @@ public class Unit : MonoBehaviour {
 	protected float receiveAttackAnimationLength;
     protected int currentRotation;
 	protected int tempCurrentRotation;
+	protected float attackWaitTime;
 
 
 
@@ -49,6 +50,11 @@ public class Unit : MonoBehaviour {
 				receiveAttackAnimationLength = ac.animationClips[i].length;
 			}
         }
+		
+        if (attackAnimationLength > receiveAttackAnimationLength + receiveAttackDelay)
+            attackWaitTime = attackAnimationLength;
+        else
+            attackWaitTime = receiveAttackAnimationLength + receiveAttackDelay;
 
         currentRotation = startingRotation;
 	} 
@@ -168,9 +174,11 @@ public class Unit : MonoBehaviour {
     // Handles the selection of the unit to attack, calls the active unit's Attack() function
 
     protected void ReturnThisUnit(object sender, InteractableObjectEventArgs e) {
-		gm.Units[gm.ActiveUnit].GetComponent<Unit>().Attack(this.gameObject);
+		// gm.Units[gm.ActiveUnit].GetComponent<Unit>().Attack(this.gameObject);
+		gm.Units[gm.ActiveUnit].GetComponent<Unit>().AskConfirmAttack(this.gameObject);
 	}
 
+	public virtual void AskConfirmAttack(GameObject otherUnit) {}
 
 
 	/* ATTACK

@@ -59,8 +59,14 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-    public GameObject[] Units {
-		get { return units; } set { units = value; } }
+    public GameObject[] Units { 
+		get {
+			return units;
+		} 
+		set {
+			units = value;
+		} 
+	}
 
 
     /* AWAKE

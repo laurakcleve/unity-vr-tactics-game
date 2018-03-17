@@ -43,10 +43,10 @@ public class Unit : MonoBehaviour {
         animator = GetComponent<Animator>();
         RuntimeAnimatorController ac = animator.runtimeAnimatorController;
         for (int i = 0; i < ac.animationClips.Length; i++) {
-            if (ac.animationClips[i].name == "WAIT04") {
+            if (ac.animationClips[i].name == "Attack") {
                 attackAnimationLength = ac.animationClips[i].length / 1.5f;
             }
-			if (ac.animationClips[i].name == "DAMAGED00") {
+			if (ac.animationClips[i].name == "BeAttacked") {
 				receiveAttackAnimationLength = ac.animationClips[i].length;
 			}
         }

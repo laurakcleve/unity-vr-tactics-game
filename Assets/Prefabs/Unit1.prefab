@@ -5197,6 +5197,7 @@ MonoBehaviour:
   attackRange: 1
   moveTime: 0.5
   receiveAttackDelay: 0.7
+  currentTile: {fileID: 0}
 --- !u!114 &114541411585998612
 MonoBehaviour:
   m_ObjectHideFlags: 1

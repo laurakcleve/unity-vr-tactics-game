@@ -10,6 +10,7 @@ public class AIUnit : Unit {
     }
 
     private IEnumerator TakeTurnAI() {
+        Debug.Log(gameObject.name + " AI checking attack #1");
         base.ActivateAttack();
         GameObject enemy = EnemyInRange();
         if (enemy != null) {
@@ -17,18 +18,23 @@ public class AIUnit : Unit {
             yield return new WaitForSeconds(attackWaitTime);
         }
         else {
+            Debug.Log(gameObject.name + " AI no enemies in range, moving");
             base.ActivateMove();
-            ShowValidTiles(validMoves);
             MoveToNearestEnemy();
             yield return new WaitUntil(() => moveAnimationComplete);
-            HideValidTiles(validMoves);
         }
 
-        base.ActivateAttack();
-        enemy = EnemyInRange();
-        if (!hasActed && enemy != null) {
-            Attack(enemy);
-            yield return new WaitForSeconds(attackWaitTime);
+        if (!hasActed) {
+            Debug.Log(gameObject.name + " AI checking attack #2");
+            base.ActivateAttack();
+            enemy = EnemyInRange();
+            if (enemy != null) {
+                Attack(enemy);
+                yield return new WaitForSeconds(attackWaitTime);
+            }
+            else {
+                Debug.Log(gameObject.name + " AI no enemies in range, ending turn");
+            }
         }
 
         gm.EndTurn();
@@ -37,7 +43,7 @@ public class AIUnit : Unit {
     private GameObject EnemyInRange() {
         foreach (GameObject tile in validAttacks) {
             GameObject otherUnit = tile.GetComponent<Tile>().CurrentUnit;
-            if (otherUnit != null && otherUnit.tag == "PlayerUnit") {
+            if (otherUnit != null && otherUnit.tag == "PlayerUnit" && !otherUnit.GetComponent<Unit>().isDead) {
                 return otherUnit;
             }
         }
@@ -57,7 +63,7 @@ public class AIUnit : Unit {
                 currentTileScript,
                 enemies[i].GetComponent<PlayerUnit>().currentTile.GetComponent<Tile>());
 
-            if (shortestDistance < 0 || shortestDistance > tempPath.Count) {
+            if ((shortestDistance < 0 || shortestDistance > tempPath.Count) && !enemies[i].GetComponent<Unit>().isDead) {
                 shortestDistance = tempPath.Count;
                 targetUnit = gm.Units[i];
                 path = tempPath;

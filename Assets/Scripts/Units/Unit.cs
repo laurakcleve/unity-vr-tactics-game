@@ -14,6 +14,10 @@ public class Unit : MonoBehaviour {
     public float moveTime = .5f;
 	public float receiveAttackDelay = .7f;
     public GameObject currentTile;
+	public int maxHealth = 20;
+	public int currentHealth;
+	public int damage = 8;
+	public bool isDead = false;
 
 	protected GameObject tempCurrentTile;
 	protected List<GameObject> validMoves;
@@ -31,11 +35,16 @@ public class Unit : MonoBehaviour {
     protected int currentRotation;
 	protected int tempCurrentRotation;
 	protected float attackWaitTime;
+	protected Slider healthSlider;
 
 
 
     protected virtual void Awake() {
         gm = GameManager.instance;
+
+		healthSlider = transform.Find("Canvas/Slider").gameObject.GetComponent<Slider>();
+		healthSlider.maxValue = maxHealth;
+		healthSlider.value = maxHealth;
 
         VRTK_InteractableObject interactable = GetComponent<VRTK_InteractableObject>();
         interactable.InteractableObjectUsed += new InteractableObjectEventHandler(ReturnThisUnit);
@@ -57,6 +66,9 @@ public class Unit : MonoBehaviour {
             attackWaitTime = receiveAttackAnimationLength + receiveAttackDelay;
 
         currentRotation = startingRotation;
+		currentHealth = maxHealth;
+
+		Debug.Log(gameObject.GetInstanceID());
 	} 
 
     public virtual void TakeTurn() {
@@ -187,6 +199,7 @@ public class Unit : MonoBehaviour {
 	// Calls other unit's ReceiveAttack() function
 
 	public virtual void Attack(GameObject otherUnit) {
+		Debug.Log(gameObject.name + " attacking " + otherUnit.name);
 		targetUnit = otherUnit;
 		Tile thisTile = currentTile.GetComponent<Tile>();
 		Tile otherTile = targetUnit.GetComponent<Unit>().currentTile.GetComponent<Tile>();
@@ -202,7 +215,7 @@ public class Unit : MonoBehaviour {
             gameObject.transform.eulerAngles = new Vector3(0, rotation, 0);
 
 			animator.SetTrigger("attack");
-			otherUnit.GetComponent<Unit>().ReceiveAttack();
+			otherUnit.GetComponent<Unit>().ReceiveAttack(this);
 			hasActed = true;
 			// StartCoroutine(AnimateAttack(otherUnit));
 		}
@@ -212,13 +225,35 @@ public class Unit : MonoBehaviour {
 	// 	yield return null;
 	// }
 
-	public void ReceiveAttack() {
-		StartCoroutine(AnimateReceiveAttack());
+	public void ReceiveAttack(Unit otherUnit) {
+		StartCoroutine(AnimateReceiveAttack(otherUnit));
 	}
 
-	IEnumerator AnimateReceiveAttack() {
+	IEnumerator AnimateReceiveAttack(Unit otherUnit) {
 		yield return new WaitForSeconds(receiveAttackDelay);
+		currentHealth -= otherUnit.damage;
+		Debug.Log(gameObject.name + " hit for " + otherUnit.damage + " damage, current health: " + currentHealth);
+		if (currentHealth <= 0) {
+			Debug.Log("Unit dies");
+			isDead = true;
+			currentHealth = 0;
+			healthSlider.value = 0;
+			gm.RemoveUnit(GetUnitNumber());
+		}
+		else {
+			healthSlider.value = currentHealth;
+		}
 		animator.SetTrigger("receiveAttack");
+	}
+
+	private int GetUnitNumber() {
+		for (int i = 0; i < gm.Units.Length; i++) {
+			if (gm.Units[i].GetInstanceID() == gameObject.GetInstanceID()) {
+				Debug.Log("Found unit to be removed: Unit at index " + i + " (" + gameObject.name + ")");
+				return i;
+			}
+		}
+		return -1;
 	}
 }
 

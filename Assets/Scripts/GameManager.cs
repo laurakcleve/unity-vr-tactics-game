@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -229,6 +230,17 @@ public class GameManager : MonoBehaviour {
 		ColorBlock cb = button.GetComponent<Button>().colors;
 		cb.normalColor = newColor;
 		button.GetComponent<Button>().colors = cb;
+	}
+
+	public void RemoveUnit(int unit) {
+		if (unit >= 0) {
+			List<GameObject> tempList = new List<GameObject>(units);
+			tempList.RemoveAt(unit);
+			units = tempList.ToArray();
+		}
+		else {
+			throw new Exception("Unit to be removed was not found");
+		}
 	}
 
 }

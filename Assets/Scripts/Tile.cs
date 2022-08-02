@@ -48,17 +48,23 @@ public class Tile : MonoBehaviour {
     -------------------------------------------------------- */
     void Awake() {
 		gm = GameManager.instance;
-		GetComponent<VRTK_InteractableObject>().InteractableObjectUsed += new InteractableObjectEventHandler(MoveUnitHere);
+		// GetComponent<VRTK_InteractableObject>().InteractableObjectUsed += new InteractableObjectEventHandler(MoveUnitHere);
 	}
 
 
-	/* MOVE UNIT HERE
-	-------------------------------------------------------- */
-	void MoveUnitHere(object sender, InteractableObjectEventArgs e) {
-        Unit unitScript = gm.Units[gm.ActiveUnit].GetComponent<Unit>();
-        List<Tile> path = GetComponent<Pathfinding>().FindPath(unitScript.currentTile.GetComponent<Tile>(), this);
-		unitScript.MoveToTile(gameObject, path);
-	}
+	// /* MOVE UNIT HERE
+	// -------------------------------------------------------- */
+	// void MoveUnitHere(object sender, InteractableObjectEventArgs e) {
+    //     Unit unitScript = gm.Units[gm.ActiveUnit].GetComponent<Unit>();
+    //     List<Tile> path = GetComponent<Pathfinding>().FindPath(unitScript.currentTile.GetComponent<Tile>(), this);
+	// 	unitScript.MoveToTile(gameObject, path);
+	// }
+
+    // private void MoveUnitHere(object sender, InteractableObjectEventArgs e) {
+    //     PlayerUnit unitScript = GameManager.instance.Units[GameManager.instance.ActiveUnit].GetComponent<PlayerUnit>();
+    //     unitScript.TargetTile = this.gameObject;
+    //     unitScript.ChangeState(unitScript.playerAnimateMove);
+    // }
 
 
     public void SetCosts(Tile start, Tile end) {

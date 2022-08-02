@@ -43,22 +43,10 @@ public class GameManager : MonoBehaviour {
 
 	private GameObject[,] tiles;
 	private GameObject[] units;
-	private int round;
+	private int round = 1;
 	private int activeUnit;
 
-    public int ActiveUnit {
-		get {
-			return activeUnit;
-		}
-		set {
-			if (value > Units.Length - 1) {
-				activeUnit = 0;
-				round++;
-			} else {
-				activeUnit = value;
-			}
-		}
-	}
+    public int ActiveUnit { get; set; }
 
     public GameObject[] Units { get; set; }
 
@@ -77,7 +65,9 @@ public class GameManager : MonoBehaviour {
 		CreateUnits();
 
 		ActiveUnit = 0;
-        round = 1;
+	}
+
+	void Start() {
         Units[ActiveUnit].GetComponent<Unit>().TakeTurn();
 	}
 
@@ -201,17 +191,17 @@ public class GameManager : MonoBehaviour {
 	}
 
 
-    /* END TURN
+    /* PASS TURN
 	-------------------------------------------------------- */
-    public void EndTurn() {
+    public void PassTurn() {
 		moveButton.onClick.RemoveAllListeners();
 		attackButton.onClick.RemoveAllListeners();
 		actionCanvas.SetActive(false);
 		Units[ActiveUnit].transform.Find("Highlight").gameObject.SetActive(false);
 
 
-        if (round < totalRounds) {
-            ActiveUnit++;
+        if (round <= totalRounds) {
+            activeUnit = (activeUnit + 1) % units.Length;
             Units[ActiveUnit].GetComponent<Unit>().TakeTurn();
         }
     }

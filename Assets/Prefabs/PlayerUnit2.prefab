@@ -2218,7 +2218,7 @@ MonoBehaviour:
   allowedGrabControllers: 0
   grabAttachMechanicScript: {fileID: 0}
   secondaryGrabActionScript: {fileID: 0}
-  isUsable: 1
+  isUsable: 0
   holdButtonToUse: 1
   useOnlyIfGrabbed: 0
   pointerActivatesUseAction: 0
@@ -2387,6 +2387,7 @@ MonoBehaviour:
   maxHealth: 20
   currentHealth: 0
   damage: 8
+  isDead: 0
 --- !u!137 &137618673936349074
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

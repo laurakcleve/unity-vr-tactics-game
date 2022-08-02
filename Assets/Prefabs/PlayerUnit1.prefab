@@ -2216,6 +2216,7 @@ MonoBehaviour:
   maxHealth: 20
   currentHealth: 0
   damage: 8
+  isDead: 0
 --- !u!114 &114087524914884056
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2363,7 +2364,7 @@ MonoBehaviour:
   allowedGrabControllers: 0
   grabAttachMechanicScript: {fileID: 0}
   secondaryGrabActionScript: {fileID: 0}
-  isUsable: 1
+  isUsable: 0
   holdButtonToUse: 1
   useOnlyIfGrabbed: 0
   pointerActivatesUseAction: 0
